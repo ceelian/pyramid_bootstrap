@@ -1,7 +1,14 @@
-========
+=====
 Usage
-========
+=====
 
-To use Pyramid Bootstrap in a project::
+To use Pyramid Bootstrap in a Pyramid project::
 
-	import pyramid_bootstrap
+	config.include("pyramid_bootstrap")
+
+Or add to pyramid.includes in paster ini file (usually development.ini or
+production.ini)::
+
+    pyramid.includes =
+        pyramid_debugtoolbar
+        pyramid_bootstrap

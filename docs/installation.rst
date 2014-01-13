@@ -6,7 +6,6 @@ At the command line::
 
     $ easy_install pyramid_bootstrap
 
-Or, if you have virtualenvwrapper installed::
+Or, if you have pip installed::
 
-    $ mkvirtualenv pyramid_bootstrap
     $ pip install pyramid_bootstrap
