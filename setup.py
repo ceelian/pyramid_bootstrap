@@ -20,7 +20,7 @@ history = open('CHANGELOG.rst').read().replace('.. :changelog:', '')
 setup(
     name='pyramid_bootstrap',
     version='0.1.0',
-    description='Twitter Bootstrap integration with Pyramid',
+    description='Bootstrap integration with Pyramid',
     long_description=readme + '\n\n' + history,
     author='Keith Yang',
     author_email='yang@keitheis.org',
