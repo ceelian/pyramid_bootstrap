@@ -9,9 +9,13 @@ class BootstrapFactory(object):
     """
 
     bootstraps = []
+    TAGS = {
+        'stylesheet': '<link rel="stylesheet" href="{}" />',
+        'script': '<script src="{}"></script>'
+    }
 
     @classmethod
-    def build(Cls, version, use_min_file=True, theme_name=None):
+    def build(Cls, version, use_min_file=True, theme_name='bootstrap-theme'):
         assets = {
             'css': 'css/bootstrap.css',
             'theme': 'css/{}.css'.format(theme_name),
@@ -22,12 +26,50 @@ class BootstrapFactory(object):
                 assets[key] = value.replace(".", ".min.")
         assets['_prefix'] = 'pyramid_bootstrap:static/{}/'.format(version)
 
-        class Bootstrap(object):
+        def build_css_property(cls, name):
 
-            TAGS = {
-                'stylesheet': '<link rel="stylesheet" href="{}" />',
-                'script': '<script src="{}"></script>'
-            }
+            css_url = name + "_url"
+            css_url_not_min = css_url + "_not_min"
+
+            def url(self):
+                return self.static_url(self.assets[name])
+
+            def url_not_min(self):
+                return self.static_url_not_min(self.assets[name])
+
+            def tag(self):
+                return Cls.TAGS['stylesheet'].format(getattr(self, css_url))
+
+            def tag_not_min(self):
+                return Cls.TAGS['stylesheet'].format(getattr(self,
+                                                             css_url_not_min))
+            setattr(cls, css_url, property(url))
+            setattr(cls, css_url_not_min, property(url_not_min))
+            setattr(cls, name, property(tag))
+            setattr(cls, name + '_not_min', property(tag_not_min))
+
+        def build_js_property(cls, name):
+
+            js_url = name + "_url"
+            js_url_not_min = js_url + '_not_min'
+
+            def url(self):
+                return self.static_url(self.assets[name])
+
+            def url_not_min(self):
+                return self.static_url_not_min(self.assets[name])
+
+            def tag(self):
+                return Cls.TAGS['script'].format(getattr(self, js_url))
+
+            def tag_not_min(self):
+                return Cls.TAGS['script'].format(getattr(self, js_url_not_min))
+            setattr(cls, js_url, property(url))
+            setattr(cls, js_url_not_min, property(url_not_min))
+            setattr(cls, name, property(tag))
+            setattr(cls, name + '_not_min', property(tag_not_min))
+
+        class Bootstrap(object):
 
             def __init__(self, request):
                 self.request = request
@@ -35,32 +77,14 @@ class BootstrapFactory(object):
             def static_url(self, path):
                 return self.request.static_url(self.assets['_prefix'] + path)
 
-            @property
-            def css_url(self):
-                return self.static_url(self.assets['css'])
-
-            @property
-            def theme_url(self):
-                return self.static_url(self.assets['theme'])
-
-            @property
-            def javascript_url(self):
-                return self.static_url(self.assets['javascript'])
-
-            @property
-            def css(self):
-                return self.TAGS['stylesheet'].format(self.css_url)
-
-            @property
-            def theme(self):
-                return self.TAGS['stylesheet'].format(self.theme_url)
-
-            @property
-            def javascript(self):
-                return self.TAGS['script'].format(self.javascript_url)
+            def static_url_not_min(self, path):
+                return self.static_url(path.replace(".min.", "."))
 
         Bootstrap.version = version
         Bootstrap.assets = assets
+        for name in ('css', 'theme'):
+            build_css_property(Bootstrap, name)
+        build_js_property(Bootstrap, 'javascript')
         return Bootstrap
 
     @classmethod
