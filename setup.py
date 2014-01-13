@@ -31,6 +31,8 @@ setup(
     package_dir={'pyramid_bootstrap': 'pyramid_bootstrap'},
     include_package_data=True,
     install_requires=[
+        "Pyramid>=1.3"
+        "six>=1.5.2"
     ],
     license="BSD",
     zip_safe=False,
