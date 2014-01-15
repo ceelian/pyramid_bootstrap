@@ -1,6 +1,6 @@
-===============================
+=================
 Pyramid Bootstrap
-===============================
+=================
 
 .. image:: https://badge.fury.io/py/pyramid_bootstrap.png
     :target: http://badge.fury.io/py/pyramid_bootstrap
@@ -17,7 +17,6 @@ Bootstrap integration with Pyramid
 * Free software: BSD license
 * Documentation: http://pyramid_bootstrap.rtfd.org.
 
-Features
---------
+.. include:: docs/installation.rst
 
-* TODO
+.. include:: docs/usage.rst
